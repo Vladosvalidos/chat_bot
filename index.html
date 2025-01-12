@@ -20,7 +20,18 @@
     <link rel="stylesheet" href="./css/mobile.css" />
     <link rel="stylesheet" href="./css/tablet.css" />
     <link rel="stylesheet" href="./css/desktop.css" />
+
   </head>
+  <div class="chat-container">
+    <div class="chat-header">Чат с ИИ</div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-footer">
+        <input type="text" id="userInput" placeholder="Напишите сообщение...">
+        <button onclick="sendMessage()">Отправить</button>
+    </div>
+</div>
+
+
   <body>
     <!--Шапка сайта -->
     <header class="header">
@@ -594,5 +605,9 @@
     </footer>
     <script src="./js/modal.js"></script>
     <script defer src="./js/mobile-menu.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="./js/chat.js" type="module"></script>
+
+
   </body>
 </html>
