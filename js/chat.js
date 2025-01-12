@@ -1,43 +1,34 @@
-import fetch from "fetch";
-import dotenv from "dotenv";
-
-// Загрузка переменных окружения из .env
-dotenv.config();
-
-if (!process.env.OPENAI_API_KEY) {
-    throw new Error("API-ключ OpenAI отсутствует. Проверьте файл .env.");
-}
-
-const fetchData = async () => {
+const fetchData = async (message) => {
     try {
-        // Выполняем запрос к API OpenAI
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        // Отправка запроса на ваш сервер (например, Node.js сервер)
+        const response = await fetch("http://localhost:3000/api/chat", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`, // Ключ API из .env
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                model: "gpt-3.5-turbo", // Указываем модель OpenAI
-                messages: [
-                    { role: "user", content: "Привет! Как ты себя чувствуешь?" } // Сообщение от пользователя
-                ]
-            })
+            body: JSON.stringify({ message }), // Передача сообщения от пользователя
         });
 
-        // Разбираем ответ
         const data = await response.json();
 
-        // Проверяем успешность запроса
         if (response.ok) {
-            console.log("Ответ от модели:", data.choices[0]?.message?.content || "Нет данных.");
+            console.log("Ответ от ИИ:", data.reply || "Нет ответа от сервера.");
+            return data.reply || "Нет ответа.";
         } else {
-            console.error("Ошибка в ответе API:", data.error);
+            console.error("Ошибка сервера:", data.error);
+            return "Ошибка обработки вашего сообщения.";
         }
     } catch (error) {
-        console.error("Ошибка при выполнении запроса:", error);
+        console.error("Ошибка подключения к серверу:", error);
+        return "Ошибка подключения к серверу.";
     }
 };
 
-// Вызов функции
-fetchData();
+// Пример вызова функции
+fetchData("Привет, как дела?")
+    .then((reply) => {
+        console.log("Ответ от ИИ:", reply);
+    })
+    .catch((error) => {
+        console.error("Ошибка:", error);
+    });

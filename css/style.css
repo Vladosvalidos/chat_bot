@@ -1139,3 +1139,67 @@ img {
   text-align: left;
   color: black;
 }
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 350px; /* Максимальная ширина окна чата */
+  height: 400px; /* Фиксированная высота окна чата */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden; /* Скрыть содержимое за пределами контейнера */
+  margin: 0 auto; /* Центрирование чата */
+}
+
+.chat-body {
+  flex: 1;
+  overflow-y: auto; /* Вертикальный скроллинг при больших ответах */
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  word-wrap: break-word; /* Перенос длинных слов */
+}
+
+.message.user {
+  background-color: #d1e7dd;
+  align-self: flex-end;
+}
+
+.message.bot {
+  background-color: #f8d7da;
+  align-self: flex-start;
+}
+
+.chat-footer {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.chat-footer input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.chat-footer button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.chat-footer button:hover {
+  background-color: #0056b3;
+}

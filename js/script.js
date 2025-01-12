@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
+    // Добавление функции sendMessage в глобальный объект window
+    window.sendMessage = sendMessage;
+
     sendButton.addEventListener("click", sendMessage);
 
     userInput.addEventListener("keypress", (event) => {

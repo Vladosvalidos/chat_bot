@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 
 dotenv.config();
 
@@ -11,6 +12,9 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 const app = express();
+
+// Настройка CORS для разрешения запросов с других источников
+app.use(cors());
 
 // Middleware для обработки JSON
 app.use(express.json());
