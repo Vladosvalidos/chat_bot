@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import fs from "fs";
 
 dotenv.config();
 
@@ -31,6 +32,9 @@ app.use(cors({
 // Middleware для обработки JSON
 app.use(express.json());
 
+// Загрузка базы вопросов-ответов
+const faq = JSON.parse(fs.readFileSync("faq.json", "utf-8"));
+
 // Роут для корневого URL
 app.get("/", (req, res) => {
     res.send("Сервер работает! Используйте маршрут /api/chat для отправки запросов.");
@@ -45,6 +49,13 @@ app.post("/api/chat", async (req, res) => {
     if (!message) {
         console.error("Ошибка: Поле 'message' отсутствует.");
         return res.status(400).json({ error: "Поле 'message' отсутствует в запросе." });
+    }
+
+    // Поиск ответа в базе вопросов
+    const matchedQuestion = faq.questions.find(q => q.question.toLowerCase() === message.toLowerCase());
+    if (matchedQuestion) {
+        console.log("Ответ найден в базе:", matchedQuestion.answer);
+        return res.json({ reply: matchedQuestion.answer });
     }
 
     try {
@@ -86,6 +97,14 @@ io.on("connection", (socket) => {
 
         if (!message) {
             socket.emit("error", { error: "Сообщение отсутствует." });
+            return;
+        }
+
+        // Поиск ответа в базе вопросов
+        const matchedQuestion = faq.questions.find(q => q.question.toLowerCase() === message.toLowerCase());
+        if (matchedQuestion) {
+            console.log("Ответ найден в базе (WebSocket):", matchedQuestion.answer);
+            socket.emit("chatReply", { reply: matchedQuestion.answer });
             return;
         }
 
