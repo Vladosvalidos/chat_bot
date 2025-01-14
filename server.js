@@ -32,7 +32,10 @@ app.use(express.json());
 app.post("/api/chat", async (req, res) => {
     const { message } = req.body;
 
+    console.log("Получено сообщение от клиента:", message);
+
     if (!message) {
+        console.error("Ошибка: Поле 'message' отсутствует.");
         return res.status(400).json({ error: "Поле 'message' отсутствует в запросе." });
     }
 
@@ -52,12 +55,16 @@ app.post("/api/chat", async (req, res) => {
 
         const data = await response.json();
 
+        console.log("Ответ от OpenAI:", data);
+
         if (response.ok) {
             res.json({ reply: data.choices[0]?.message?.content || "Нет данных." });
         } else {
+            console.error("Ошибка от OpenAI:", data.error);
             res.status(500).json({ error: data.error || "Ошибка в ответе OpenAI." });
         }
     } catch (error) {
+        console.error("Ошибка при выполнении запроса:", error);
         res.status(500).json({ error: error.message || "Ошибка при выполнении запроса." });
     }
 });
@@ -67,6 +74,8 @@ io.on("connection", (socket) => {
     console.log("Новый клиент подключен");
 
     socket.on("chatMessage", async (message) => {
+        console.log("Получено сообщение через WebSocket:", message);
+
         if (!message) {
             socket.emit("error", { error: "Сообщение отсутствует." });
             return;
@@ -87,12 +96,16 @@ io.on("connection", (socket) => {
 
             const data = await response.json();
 
+            console.log("Ответ от OpenAI через WebSocket:", data);
+
             if (response.ok) {
                 socket.emit("chatReply", { reply: data.choices[0]?.message?.content || "Нет данных." });
             } else {
+                console.error("Ошибка от OpenAI через WebSocket:", data.error);
                 socket.emit("error", { error: data.error || "Ошибка в ответе OpenAI." });
             }
         } catch (error) {
+            console.error("Ошибка при выполнении запроса через WebSocket:", error);
             socket.emit("error", { error: error.message || "Ошибка при выполнении запроса." });
         }
     });
