@@ -5,6 +5,7 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import fs from "fs";
+import stringSimilarity from "string-similarity";
 
 dotenv.config();
 
@@ -51,10 +52,14 @@ app.post("/api/chat", async (req, res) => {
         return res.status(400).json({ error: "Поле 'message' отсутствует в запросе." });
     }
 
-    // Поиск ответа в базе вопросов
-    const matchedQuestion = faq.questions.find(q => q.question.toLowerCase() === message.toLowerCase());
-    if (matchedQuestion) {
-        console.log("Ответ найден в базе:", matchedQuestion.answer);
+    // Поиск наиболее подходящего вопроса в базе
+    const questions = faq.questions.map(q => q.question);
+    const bestMatch = stringSimilarity.findBestMatch(message.toLowerCase(), questions);
+
+    // Если совпадение достаточно близко
+    if (bestMatch.bestMatch.rating > 0.6) { // 0.6 — уровень схожести, можно подстроить
+        const matchedQuestion = faq.questions[bestMatch.bestMatchIndex];
+        console.log("Найдено совпадение в базе:", matchedQuestion);
         return res.json({ reply: matchedQuestion.answer });
     }
 
@@ -100,10 +105,14 @@ io.on("connection", (socket) => {
             return;
         }
 
-        // Поиск ответа в базе вопросов
-        const matchedQuestion = faq.questions.find(q => q.question.toLowerCase() === message.toLowerCase());
-        if (matchedQuestion) {
-            console.log("Ответ найден в базе (WebSocket):", matchedQuestion.answer);
+        // Поиск наиболее подходящего вопроса в базе
+        const questions = faq.questions.map(q => q.question);
+        const bestMatch = stringSimilarity.findBestMatch(message.toLowerCase(), questions);
+
+        // Если совпадение достаточно близко
+        if (bestMatch.bestMatch.rating > 0.6) { // 0.6 — уровень схожести, можно подстроить
+            const matchedQuestion = faq.questions[bestMatch.bestMatchIndex];
+            console.log("Найдено совпадение в базе (WebSocket):", matchedQuestion);
             socket.emit("chatReply", { reply: matchedQuestion.answer });
             return;
         }
