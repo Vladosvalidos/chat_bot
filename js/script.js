@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const serverUrl = "http://31.220.90.160:3000/api/chat"; // Обновлённый адрес сервера
+
     async function sendMessage() {
         const message = userInput.value.trim();
         if (!message) return;
@@ -16,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         userInput.value = "";
 
         try {
-            const response = await fetch("http://localhost:3000/api/chat", {
+            const response = await fetch(serverUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message }),
@@ -32,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (error) {
             console.error("Ошибка при подключении к серверу:", error.message);
-            addMessage("bot", "Ошибка подключения к серверу.");
+            addMessage("bot", "Ошибка подключения к серверу. Проверьте соединение.");
         }
     }
 
