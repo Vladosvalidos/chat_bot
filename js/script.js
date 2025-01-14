@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const serverUrl = "http://31.220.90.160:3000/api/chat"; // Обновлённый адрес сервера
+    const serverUrl = "https://31.220.90.160/api/chat"; // Обновлённый адрес сервера
 
     async function sendMessage() {
         const message = userInput.value.trim();
