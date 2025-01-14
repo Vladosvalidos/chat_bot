@@ -22,8 +22,11 @@ const io = new Server(httpServer, {
     }
 });
 
-// Настройка CORS для разрешения запросов с других источников
-app.use(cors());
+// Настройка CORS для разрешения запросов с вашего GitHub Pages
+app.use(cors({
+    origin: "https://vladosvalidos.github.io",
+    methods: ["GET", "POST"]
+}));
 
 // Middleware для обработки JSON
 app.use(express.json());
