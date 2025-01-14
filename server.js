@@ -28,6 +28,11 @@ app.use(cors());
 // Middleware для обработки JSON
 app.use(express.json());
 
+// Роут для корневого URL
+app.get("/", (req, res) => {
+    res.send("Сервер работает! Используйте маршрут /api/chat для отправки запросов.");
+});
+
 // Роут для обработки запросов от клиента через HTTP
 app.post("/api/chat", async (req, res) => {
     const { message } = req.body;
