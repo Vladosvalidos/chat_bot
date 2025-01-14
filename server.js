@@ -103,7 +103,7 @@ io.on("connection", (socket) => {
 });
 
 // Запуск сервера
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, "0.0.0.0", () => {
     console.log(`Сервер запущен на порту ${PORT}`);
-    console.log(`HTTP доступен по адресу http://localhost:${PORT}`);
+    console.log(`HTTP доступен по адресу http://31.220.90.160:${PORT}`);
 });
